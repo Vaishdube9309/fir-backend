@@ -7,11 +7,11 @@ dotenv.config();
 
 const app = express();
 
-// Middleware
+// ✅ Middleware
 app.use(cors());
 app.use(express.json());
 
-// ✅ Root route (browser test साठी)
+// ✅ Root route (test साठी)
 app.get("/", (req, res) => {
   res.send("🚀 FIR Backend चालू आहे");
 });
@@ -48,11 +48,12 @@ app.post("/generate-fir", async (req, res) => {
 
     const data = await response.json();
 
-    // Debug log (Render logs मध्ये दिसेल)
-    console.log("OpenAI Response:", data);
+    console.log("AI Response:", data); // logs मध्ये दिसेल
 
     if (!data.choices) {
-      return res.status(500).json({ error: "AI response error" });
+      return res.status(500).json({
+        error: "AI response error (API key / quota check करा)"
+      });
     }
 
     res.json({
@@ -61,11 +62,13 @@ app.post("/generate-fir", async (req, res) => {
 
   } catch (error) {
     console.error("Server Error:", error);
-    res.status(500).json({ error: "Server error आला ❌" });
+    res.status(500).json({
+      error: "Server error आला ❌"
+    });
   }
 });
 
-// ✅ IMPORTANT: PORT fix (Render साठी)
+// ✅ MOST IMPORTANT (Render साठी)
 const PORT = process.env.PORT || 3000;
 
 app.listen(PORT, () => {

@@ -10,12 +10,12 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
-// ✅ Root route (test)
+// ✅ Root route
 app.get("/", (req, res) => {
-  res.send("🚀 Smart FIR Backend चालू आहे");
+  res.send("🚀 Smart Hybrid FIR Backend चालू आहे (India Time Enabled)");
 });
 
-// ✅ SMART FIR GENERATOR (FREE LOGIC)
+// ✅ HYBRID SMART FIR GENERATOR
 app.post("/generate-fir", (req, res) => {
   const { complaint } = req.body;
 
@@ -29,55 +29,87 @@ app.post("/generate-fir", (req, res) => {
 
   const text = complaint.toLowerCase();
 
-  // 🔍 Smart Detection
-  if (text.includes("mobile") || text.includes("चोरी")) {
+  // 🔍 Smart Detection (Marathi + English)
+  if (
+    text.includes("mobile") ||
+    text.includes("मोबाईल") ||
+    text.includes("चोरी") ||
+    text.includes("theft") ||
+    text.includes("stolen")
+  ) {
     crimeType = "चोरी";
     section = "IPC 379";
     priority = "MEDIUM";
   } 
-  else if (text.includes("fraud") || text.includes("फसवणूक")) {
+  else if (
+    text.includes("fraud") ||
+    text.includes("फसवणूक") ||
+    text.includes("scam") ||
+    text.includes("cheat")
+  ) {
     crimeType = "फसवणूक";
     section = "IPC 420";
     priority = "HIGH";
   }
-  else if (text.includes("maramari") || text.includes("भांडण")) {
+  else if (
+    text.includes("भांडण") ||
+    text.includes("maramari") ||
+    text.includes("fight")
+  ) {
     crimeType = "मारामारी";
     section = "IPC 323";
     priority = "MEDIUM";
   }
-  else if (text.includes("attack") || text.includes("murder")) {
+  else if (
+    text.includes("attack") ||
+    text.includes("murder") ||
+    text.includes("हत्या")
+  ) {
     crimeType = "गंभीर गुन्हा";
     section = "IPC 302";
     priority = "HIGH";
   }
 
-  // 🔢 FIR Number Generate
+  // 🔢 FIR Number
   const firNumber = "FIR-" + Date.now();
 
+  // 🇮🇳 INDIA DATE & TIME FIX
+  const currentDate = new Date().toLocaleDateString("en-IN", {
+    timeZone: "Asia/Kolkata"
+  });
+
+  const currentTime = new Date().toLocaleTimeString("en-IN", {
+    timeZone: "Asia/Kolkata"
+  });
+
+  // 🤖 AI-style FIR
   const fir = `
-📄 FIR REPORT
+📄 प्रथम माहिती अहवाल (FIR)
 
 FIR क्रमांक: ${firNumber}
 
-तक्रार: ${complaint}
+तक्रारदाराने खालीलप्रमाणे माहिती दिली आहे:
+"${complaint}"
 
-दिनांक: ${new Date().toLocaleDateString()}
-वेळ: ${new Date().toLocaleTimeString()}
+प्राथमिक तपासानुसार, ही घटना "${crimeType}" प्रकारात मोडते.
+सदर प्रकरणावर ${section} अंतर्गत गुन्हा नोंदविण्यात येत आहे.
 
-गुन्ह्याचा प्रकार: ${crimeType}
-लागू कलम: ${section}
-प्राधान्य (Priority): ${priority}
+घटनेची तारीख: ${currentDate}
+वेळ: ${currentTime}
 
-तपास स्थिती: Pending
+प्राधान्य स्तर: ${priority}
+
+पुढील कारवाई:
+सदर प्रकरणाचा तपास संबंधित अधिकाऱ्याकडे सोपविण्यात येत आहे.
 
 नोंद:
-ही Smart FIR system logic वापरून तयार केली आहे (Free Version).
+ही FIR प्रणालीद्वारे स्वयंचलितरीत्या (Hybrid Smart Logic) तयार करण्यात आली आहे.
 `;
 
   res.json({ fir });
 });
 
-// ✅ PORT (Render साठी important)
+// ✅ PORT (Render साठी)
 const PORT = process.env.PORT || 3000;
 
 app.listen(PORT, () => {

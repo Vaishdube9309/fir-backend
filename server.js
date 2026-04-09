@@ -10,12 +10,12 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
-// ✅ Root route
+// ✅ Root route (test)
 app.get("/", (req, res) => {
-  res.send("🚀 FIR Backend चालू आहे");
+  res.send("🚀 Smart FIR Backend चालू आहे");
 });
 
-// ✅ FIR Generate (Demo)
+// ✅ SMART FIR GENERATOR (FREE LOGIC)
 app.post("/generate-fir", (req, res) => {
   const { complaint } = req.body;
 
@@ -23,27 +23,61 @@ app.post("/generate-fir", (req, res) => {
     return res.status(400).json({ error: "Complaint required" });
   }
 
+  let crimeType = "सामान्य तक्रार";
+  let section = "N/A";
+  let priority = "LOW";
+
+  const text = complaint.toLowerCase();
+
+  // 🔍 Smart Detection
+  if (text.includes("mobile") || text.includes("चोरी")) {
+    crimeType = "चोरी";
+    section = "IPC 379";
+    priority = "MEDIUM";
+  } 
+  else if (text.includes("fraud") || text.includes("फसवणूक")) {
+    crimeType = "फसवणूक";
+    section = "IPC 420";
+    priority = "HIGH";
+  }
+  else if (text.includes("maramari") || text.includes("भांडण")) {
+    crimeType = "मारामारी";
+    section = "IPC 323";
+    priority = "MEDIUM";
+  }
+  else if (text.includes("attack") || text.includes("murder")) {
+    crimeType = "गंभीर गुन्हा";
+    section = "IPC 302";
+    priority = "HIGH";
+  }
+
+  // 🔢 FIR Number Generate
+  const firNumber = "FIR-" + Date.now();
+
   const fir = `
 📄 FIR REPORT
+
+FIR क्रमांक: ${firNumber}
 
 तक्रार: ${complaint}
 
 दिनांक: ${new Date().toLocaleDateString()}
-
 वेळ: ${new Date().toLocaleTimeString()}
 
-तक्रारीचा प्रकार: चोरी / गुन्हा (Demo)
+गुन्ह्याचा प्रकार: ${crimeType}
+लागू कलम: ${section}
+प्राधान्य (Priority): ${priority}
 
 तपास स्थिती: Pending
 
 नोंद:
-ही एक demo FIR आहे. पुढील तपास सुरू आहे.
+ही Smart FIR system logic वापरून तयार केली आहे (Free Version).
 `;
 
   res.json({ fir });
 });
 
-// ✅ PORT fix
+// ✅ PORT (Render साठी important)
 const PORT = process.env.PORT || 3000;
 
 app.listen(PORT, () => {

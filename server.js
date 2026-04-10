@@ -12,7 +12,7 @@ app.use(express.json());
 
 // ✅ Root route
 app.get("/", (req, res) => {
-  res.send("🚀 Smart Hybrid FIR Backend चालू आहे (India Time Enabled)");
+  res.send("🚀 Smart AI FIR Backend चालू आहे (India Time Enabled)");
 });
 
 // ✅ HYBRID SMART FIR GENERATOR
@@ -103,7 +103,7 @@ FIR क्रमांक: ${firNumber}
 सदर प्रकरणाचा तपास संबंधित अधिकाऱ्याकडे सोपविण्यात येत आहे.
 
 नोंद:
-ही FIR प्रणालीद्वारे स्वयंचलितरीत्या (Hybrid Smart Logic) तयार करण्यात आली आहे.
+ही FIR प्रणालीद्वारे स्वयंचलितरीत्या तयार करण्यात आली आहे.
 `;
 
   res.json({ fir });
